@@ -9,6 +9,9 @@ import com.google.gson.Gson
 private const val GLOBAL_KEY_PREF = "GLOBAL_KEY_PREF"
 private const val DEVICE_INFO_KEY_PREF = "DEVICE_INFO_KEY_PREF"
 private const val AUTH_TOKEN_KEY_PREF = "AUTH_TOKEN_KEY_PREF"
+private const val DEVICE_KEY_PREF = "DEVICE_KEY_PREF"
+private const val BRANCH_KEY_PREF = "BRANCH_KEY_PREF"
+
 
 class DefaultLocalRepository(context: Context) : LocalRepository {
 
@@ -32,9 +35,27 @@ class DefaultLocalRepository(context: Context) : LocalRepository {
         editor.apply()
     }
 
-    override fun getDeviceInfo(): DeviceInfo {
+    override fun getDeviceInfo(): DeviceInfo? {
         val json = sharedPreferences.getString(DEVICE_INFO_KEY_PREF, "")
-        val deviceInfo = gson.fromJson(json, DeviceInfo::class.java)
-        return deviceInfo
+        if (json == "") return null
+        return gson.fromJson(json, DeviceInfo::class.java)
+    }
+
+    override fun setBranchId(id: String) {
+        editor.putString(BRANCH_KEY_PREF, id)
+        editor.apply()
+    }
+
+    override fun setDeviceId(id: String) {
+        editor.putString(DEVICE_KEY_PREF, id)
+        editor.apply()
+    }
+
+    override fun getBranchId(): String? {
+        return sharedPreferences.getString(BRANCH_KEY_PREF, null)
+    }
+
+    override fun getDeviceId(): String? {
+        return sharedPreferences.getString(DEVICE_INFO_KEY_PREF, null)
     }
 }

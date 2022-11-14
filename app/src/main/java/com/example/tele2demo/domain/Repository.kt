@@ -6,11 +6,9 @@ import com.example.tele2demo.domain.model.DeviceInfo
 
 interface Repository {
 
-    fun login(login: String, password: String): Response<String>
+    suspend fun getCities(): Response<List<City>>
 
-    fun getCities(): Response<List<City>>
+    suspend fun getBranches(cityId: String): Response<List<Branch>>
 
-    fun getBranches(cityId: String): Response<List<Branch>>
-
-    fun getDeviceInfo(branchId: String, deviceId: String): Response<DeviceInfo>
+    suspend fun getDeviceInfo(branchId: String, deviceId: String): Response<DeviceInfo>
 }

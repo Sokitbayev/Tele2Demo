@@ -10,5 +10,13 @@ interface LocalRepository {
 
     fun saveDeviceInfo(deviceInfo: DeviceInfo)
 
-    fun getDeviceInfo(): DeviceInfo
+    fun getDeviceInfo(): DeviceInfo?
+
+    fun setBranchId(id: String)
+
+    fun setDeviceId(id: String)
+
+    fun getBranchId(): String?
+
+    fun getDeviceId(): String?
 }
