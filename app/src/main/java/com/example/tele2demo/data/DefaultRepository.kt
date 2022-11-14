@@ -13,21 +13,7 @@ class DefaultRepository(
     private val deviceInfoMapper: DeviceInfoMapper
 ) : Repository {
 
-    override fun login(login: String, password: String): Response<String> = try {
-        val result = dataSource.login(LoginRequestApi(login, password))
-        result.map(
-            mapSuccess = {
-                Response.Success(it.token)
-            },
-            mapFailure = {
-                Response.Failure(Exception())
-            }
-        )
-    } catch (e: Exception) {
-        Response.Failure(Exception())
-    }
-
-    override fun getCities(): Response<List<City>> = try {
+    override suspend fun getCities(): Response<List<City>> = try {
         val result = dataSource.getCities()
         result.map(
             mapSuccess = {
@@ -41,7 +27,7 @@ class DefaultRepository(
         Response.Failure(Exception())
     }
 
-    override fun getBranches(cityId: String): Response<List<Branch>> = try {
+    override suspend fun getBranches(cityId: String): Response<List<Branch>> = try {
         val result = dataSource.getBranches(cityId)
         result.map(
             mapSuccess = {
@@ -55,14 +41,17 @@ class DefaultRepository(
         Response.Failure(Exception())
     }
 
-    override fun getDeviceInfo(branchId: String, deviceId: String): Response<DeviceInfo> = try {
-        val response =
-            dataSource.getDeviceInfo(DeviceInfoRequestApi(branchId = branchId, deviceId = deviceId))
-        response.map(
-            mapSuccess = { Response.Success(deviceInfoMapper.map(it)) },
-            mapFailure = { Response.Failure(Exception()) }
-        )
-    } catch (e: Exception) {
-        Response.Failure(Exception())
-    }
+    override suspend fun getDeviceInfo(branchId: String, deviceId: String): Response<DeviceInfo> =
+        try {
+            val response =
+                dataSource.getDeviceInfo(branchId = branchId, barcode = deviceId)
+            response.map(
+                mapSuccess = {
+                    Response.Success(deviceInfoMapper.map(it)) },
+                mapFailure = {
+                    Response.Failure(Exception()) }
+            )
+        } catch (e: Exception) {
+            Response.Failure(Exception())
+        }
 }

@@ -5,9 +5,10 @@ data class DeviceInfo(
     val subTitle: String,
     val banner: Banner,
     val price: Price,
+    val tariffName: String,
     val installmentPlan: InstallmentPlan,
     val characteristic: List<Characteristic>,
-    val tariff: Tariff,
+    val tariff: List<Tariff>,
     val shopUrls: List<Shop>
 ) {
     data class Banner(
@@ -34,13 +35,7 @@ data class DeviceInfo(
     data class Tariff(
         val iconUrl: String,
         val name: TextLang,
-        val resources: Resources
     ) {
-        data class Resources(
-            val sms: String,
-            val minutes: String,
-            val data: String,
-        )
     }
 
     data class Shop(

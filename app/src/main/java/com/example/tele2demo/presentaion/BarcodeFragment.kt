@@ -40,9 +40,7 @@ class BarcodeFragment : Fragment() {
         val barcodeLauncher = registerForActivityResult(
             ScanContract()
         ) { result: ScanIntentResult ->
-            val action =
-                BarcodeFragmentDirections.actionBarcodeFragmentToConfirmDeviceFragment(result.contents)
-            findNavController().navigate(action)
+
         }
         val options = ScanOptions()
         options.setDesiredBarcodeFormats(ScanOptions.EAN_13)

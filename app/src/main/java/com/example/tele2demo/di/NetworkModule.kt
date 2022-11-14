@@ -1,11 +1,6 @@
 package com.example.tele2demo.di
 
-import android.content.Context
-import com.example.tele2demo.BuildConfig
-import com.example.tele2demo.data.AuthInterceptor
-import com.example.tele2demo.data.DefaultLocalRepository
-import com.example.tele2demo.data.DefaultRepository
-import com.example.tele2demo.data.NetworkDataSource
+import com.example.tele2demo.data.*
 import com.example.tele2demo.domain.LocalRepository
 import com.example.tele2demo.domain.Repository
 import com.google.gson.Gson
@@ -28,7 +23,7 @@ val networkModule = module {
     single { AuthInterceptor(userData = get()) }
     single { provideGson() }
     single(named(NETWORK_CLIENT)) {
-        createOkHttpClient(interceptor = get(), context = androidContext())
+        createOkHttpClient(interceptor = get())
     }
     single(named(NETWORK_SERVICE)) {
         createApiService(
@@ -40,7 +35,7 @@ val networkModule = module {
     factory {
         DefaultRepository(
             dataSource = get(),
-            deviceInfoMapper = get()
+            deviceInfoMapper = DeviceInfoMapper()
         )
     }.bind(Repository::class)
     factory { DefaultLocalRepository(androidContext()) }.bind(LocalRepository::class)
@@ -51,15 +46,14 @@ private fun createApiService(
     gson: Gson
 ): Retrofit {
     return Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
+        .baseUrl("http://78.40.109.227:8080/")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 }
 
 private fun createOkHttpClient(
-    interceptor: AuthInterceptor,
-    context: Context
+    interceptor: AuthInterceptor
 ): OkHttpClient {
     val okHttpClientBuilder = OkHttpClient.Builder()
         .addInterceptor(interceptor)

@@ -12,7 +12,7 @@ class Tele2DemoApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@Tele2DemoApp)
-            modules(mainModule, networkModule)
+            modules(networkModule, mainModule)
         }
     }
 }

@@ -9,10 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.tele2demo.R
 import com.example.tele2demo.databinding.FragmentLoginPageBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginPageFragment : Fragment() {
 
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModel()
 
     private var _binding: FragmentLoginPageBinding? = null
     private val binding get() = _binding!!
@@ -30,10 +31,12 @@ class LoginPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginPageEnterBtn.setOnClickListener {
-            viewModel.onBtnClick(
+            viewModel.onBtnClick("admin", "betaWolves#1")
+
+            /*viewModel.onBtnClick(
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
-            )
+            )*/
         }
         viewModel.viewState.observe(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)

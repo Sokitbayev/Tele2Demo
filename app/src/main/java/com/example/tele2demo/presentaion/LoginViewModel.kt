@@ -11,15 +11,14 @@ import kotlin.coroutines.CoroutineContext
 
 class LoginViewModel(
     private val localRepository: LocalRepository,
-    private val userData: UserData,
-    private val ioContext: CoroutineContext = Dispatchers.IO
+    private val userData: UserData
 ) : ViewModel() {
 
     private val _viewState = MutableLiveData<ViewState<Boolean>>()
     val viewState: LiveData<ViewState<Boolean>> = _viewState
 
     fun onBtnClick(login: String, password: String) {
-        val token = Base64.getEncoder().encodeToString("$login + $password".toByteArray())
+        val token = Base64.getEncoder().encodeToString("$login:$password".toByteArray())
         localRepository.setToken(token)
         userData.token = token
         _viewState.value = ViewState.Data(true)

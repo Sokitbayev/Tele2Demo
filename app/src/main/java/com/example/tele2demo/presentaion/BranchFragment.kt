@@ -1,5 +1,6 @@
 package com.example.tele2demo.presentaion
 
+import android.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,10 +15,11 @@ import com.example.tele2demo.domain.ViewState
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BranchFragment : Fragment() {
 
-    private val viewModel: BranchViewModel by viewModels()
+    private val viewModel: BranchViewModel by viewModel()
     private var _binding: FragmentSalonBinding? = null
     private val binding get() = _binding!!
 
@@ -33,9 +35,20 @@ class BranchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val barcodeLauncher = registerForActivityResult(
+            ScanContract()
+        ) { result: ScanIntentResult ->
+            viewModel.onScannerResult(result.contents)
+        }
+        val options = ScanOptions()
+        options.setDesiredBarcodeFormats(ScanOptions.EAN_13)
+        options.setPrompt("POWERED BY DIGITAL")
+        options.setCameraId(0)
+        options.setOrientationLocked(false)
+        options.setBeepEnabled(false)
+        options.setBarcodeImageEnabled(true)
         binding.enterBtn.setOnClickListener {
-            openScanner()
+            barcodeLauncher.launch(options)
         }
         viewModel.viewState.observe(viewLifecycleOwner) {
             when (it) {
@@ -44,12 +57,18 @@ class BranchFragment : Fragment() {
                 is ViewState.Loading -> TODO()
             }
         }
-        binding.chooseCity.setOnClickListener {
-            viewModel.getCities()
+        binding.chooseCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                viewModel.onCitySelected(p2)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
         }
         binding.chooseBranch.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                //viewModel.getBranches()
+                viewModel.onBranchSelected(p2)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -68,7 +87,7 @@ class BranchFragment : Fragment() {
             is BranchViewState.Branches -> {
                 val adapter = ArrayAdapter(
                     requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
+                    R.layout.simple_spinner_dropdown_item,
                     state.branches.map { it.name }
                 )
                 binding.chooseBranch.adapter = adapter
@@ -76,10 +95,17 @@ class BranchFragment : Fragment() {
             is BranchViewState.Cities -> {
                 val adapter = ArrayAdapter(
                     requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
+                    R.layout.simple_spinner_dropdown_item,
                     state.cities.map { it.name }
                 )
                 binding.chooseCity.adapter = adapter
+            }
+            is BranchViewState.OnDataReady -> {
+                val action = BranchFragmentDirections.actionSecondFragmentToConfirmDeviceFragment(
+                    state.deviceId,
+                    state.branchId
+                )
+                findNavController().navigate(action)
             }
         }
     }
@@ -88,9 +114,7 @@ class BranchFragment : Fragment() {
         val barcodeLauncher = registerForActivityResult(
             ScanContract()
         ) { result: ScanIntentResult ->
-            val action =
-                BarcodeFragmentDirections.actionBarcodeFragmentToConfirmDeviceFragment(result.contents)
-            findNavController().navigate(action)
+            viewModel.onScannerResult(result.contents)
         }
         val options = ScanOptions()
         options.setDesiredBarcodeFormats(ScanOptions.EAN_13)

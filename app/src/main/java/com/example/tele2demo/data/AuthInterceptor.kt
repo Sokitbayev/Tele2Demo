@@ -11,7 +11,7 @@ class AuthInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val request = originalRequest.newBuilder()
-            .header("Authorization", userData.token)
+            .header("Authorization", "Basic ${userData.token}")
             .build()
 
         return chain.proceed(request)

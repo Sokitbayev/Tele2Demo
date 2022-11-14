@@ -13,7 +13,11 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/SecondFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -21,17 +25,12 @@
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_salon">
         <action
-            android:id="@+id/action_SecondFragment_to_barcodeFragment"
-            app:destination="@id/barcodeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/barcodeFragment"
-        android:name="com.example.tele2demo.presentaion.BarcodeFragment"
-        android:label="fragment_barcode"
-        tools:layout="@layout/fragment_barcode" >
-        <action
-            android:id="@+id/action_barcodeFragment_to_confirmDeviceFragment"
-            app:destination="@id/confirmDeviceFragment" />
+            android:id="@+id/action_SecondFragment_to_confirmDeviceFragment"
+            app:destination="@id/confirmDeviceFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/confirmDeviceFragment"
@@ -43,12 +42,56 @@
             app:argType="string"
             app:nullable="true" />
         <action
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"
             android:id="@+id/action_confirmDeviceFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="branchId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.tele2demo.presentaion.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"
+            android:id="@+id/action_mainFragment_to_installmentsFragment"
+            app:destination="@id/installmentsFragment" />
+        <action
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"
+            android:id="@+id/action_mainFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/installmentsFragment"
+        android:name="com.example.tele2demo.presentaion.InstallmentsFragment"
+        android:label="fragment_installments"
+        tools:layout="@layout/fragment_installments" >
+        <action
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"
+            android:id="@+id/action_installmentsFragment_to_qrBottomSheetFragment"
+            app:destination="@id/qrBottomSheetFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/qrBottomSheetFragment"
+        android:name="com.example.tele2demo.presentaion.QrBottomSheetFragment"
+        android:label="fragment_qr_bottom_sheet"
+        tools:layout="@layout/fragment_qr_bottom_sheet" >
+        <argument
+            android:name="link"
+            app:argType="string" />
+    </dialog>
 </navigation>

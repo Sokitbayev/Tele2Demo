@@ -1,16 +1,19 @@
 package com.example.tele2demo.data.model
 
 import com.example.tele2demo.domain.model.TextLang
+import com.google.gson.annotations.SerializedName
 
 data class DeviceInfoResponseApi(
     val title: String,
+    val tariffName: String?,
+    @SerializedName("subtitle")
     val subTitle: String,
     val banner: BannerResponseApi,
     val price: PriceResponseApi,
     val installmentPlan: InstallmentPlanResponseApi,
-    val characteristic: List<CharacteristicResponseApi>,
-    val tariff: TariffResponseApi,
-    val shopUrls: List<ShopResponseApi>
+    val characteristics: List<CharacteristicResponseApi>,
+    val tariffResources: List<TariffResponseApi>,
+    val shopList: List<ShopResponseApi>
 ) {
     data class BannerResponseApi(
         val imageUrl: String,
@@ -24,7 +27,7 @@ data class DeviceInfoResponseApi(
 
     data class InstallmentPlanResponseApi(
         val price: String,
-        val months: String
+        val monthsCount: String
     )
 
     data class CharacteristicResponseApi(
@@ -35,19 +38,12 @@ data class DeviceInfoResponseApi(
 
     data class TariffResponseApi(
         val iconUrl: String,
-        val name: TextLang,
-        val resources: ResourcesResponseApi
-    ) {
-        data class ResourcesResponseApi(
-            val sms: String,
-            val minutes: String,
-            val data: String,
-        )
-    }
+        val text: TextLang,
+    )
 
     data class ShopResponseApi(
         val name: String,
-        val iconUrl: String,
+        val imageUrl: String,
         val link: String
     )
 }
